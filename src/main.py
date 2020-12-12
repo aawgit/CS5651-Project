@@ -1,5 +1,4 @@
 import pandas as pd
-import plotter as pltr
 
 
 raw_data = pd.read_csv('./data/Mobile banking app - collected data.csv')
@@ -7,7 +6,9 @@ raw_data = pd.read_csv('./data/Mobile banking app - collected data.csv')
 COL_NAME_GENDER = 'Gender'
 COL_NAME_AGE = 'Age'
 DISTANCE_H = 'Distance to bank from home'
+INCOME = 'Monthly income'
 FREQ = 'Frequency of usage'
+SECUTIRY = 'Rating in terms of security (electronic)'
 
 columns = ['Timestamp', 'Gender', 'Age', 'Location', 'Education',
        'Employment status', 'Monthly income', 'Married or not',
@@ -25,16 +26,9 @@ one_hot_gender = pd.get_dummies(raw_data[COL_NAME_GENDER], prefix='Gender ')
 one_hot_freq = pd.get_dummies(raw_data[FREQ])
 
 data = pd.concat([raw_data, one_hot_freq], axis = 1)
+
 gr_by_gender = data.groupby(COL_NAME_GENDER).sum().reset_index()
+gr_by_income = data.groupby(INCOME).sum().reset_index()
+gr_by_sec_rating = data.groupby(SECUTIRY).sum().reset_index()
 
-
-by_freq_1 = data.groupby(FREQ).sum().reset_index()
-
-
-gr_by_gender = raw_data.groupby(COL_NAME_GENDER).count().reset_index()
-
-labels = gr_by_gender[COL_NAME_GENDER]
-sizes = gr_by_gender[COL_NAME_AGE]
-pltr.plot_py_chart(sizes, labels, 'By gender')
-
-raw_data.head()
+gr_by_sec_rating.to_csv('./by_security.csv')
